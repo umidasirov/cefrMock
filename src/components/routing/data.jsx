@@ -4,6 +4,7 @@ import ListeningDetail from "../tests/listening/ListeningDetail";
 import WritingDetail from "../tests/writing/WritingDetail";
 import ReadingDetail from "../tests/reading/ReadingDetail";
 import SpeakingDetail from "../tests/speaking/SpeakingDetail";
+import ResultsPage from "../bodylar/results/results";
 export const appRoutes = [
   { path: "/", element: <Main /> },
   { path: "/tests", element: <AllTestsPage /> },
@@ -12,4 +13,5 @@ export const appRoutes = [
   {path: "/tests/reading",element: <ReadingDetail/>},
   {path: "/tests/writing",element: <WritingDetail/>},
   {path: "/tests/speaking",element: <SpeakingDetail/>},
+  {path: "/results",element: <ResultsPage/>},
 ];

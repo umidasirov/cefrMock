@@ -9,7 +9,7 @@ export default function Routing() {
     <div className="flex flex-col min-h-screen h-full">
       <Navbar />
 
-      <main className="flex-1 my-[40px]">
+      <main className="flex-1 my-[50px]">
         <Routes>
           {appRoutes.map(({ path, element }) => (
             <Route key={path} path={path} element={element} />
