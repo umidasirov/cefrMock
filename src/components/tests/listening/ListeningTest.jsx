@@ -1,10 +1,32 @@
-// src/pages/listening/Listening.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { listeningTest } from "./dataTest";
 
 export default function Listening() {
   const [currentPart, setCurrentPart] = useState(0);
   const part = listeningTest[currentPart];
+
+  // store answers per part: { 0: { radios: {qId: value}, inputs: ['','',''] }, 1: {...} }
+  const [answersByPart, setAnswersByPart] = useState({});
+
+  // determine inputCount for this part:
+  const inputCount =
+    // prefer explicit value from dataTest if provided
+    part?.inputCount ??
+    // fallback: if this is part index 1 (part 2) use 5 inputs as requested
+    (currentPart === 1 ? 5 : 0);
+
+  // initialize answers for current part when changed
+  useEffect(() => {
+    setAnswersByPart((prev) => {
+      if (prev[currentPart]) return prev;
+      const init = {
+        radios: {},
+        inputs: Array(inputCount).fill(""),
+      };
+      return { ...prev, [currentPart]: init };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPart, inputCount]);
 
   const nextPart = () => {
     if (currentPart < listeningTest.length - 1) setCurrentPart(currentPart + 1);
@@ -12,6 +34,25 @@ export default function Listening() {
 
   const prevPart = () => {
     if (currentPart > 0) setCurrentPart(currentPart - 1);
+  };
+
+  const handleRadioChange = (qId, value) => {
+    setAnswersByPart((prev) => {
+      const partAns = prev[currentPart] || { radios: {}, inputs: [] };
+      return {
+        ...prev,
+        [currentPart]: { ...partAns, radios: { ...partAns.radios, [qId]: value } },
+      };
+    });
+  };
+
+  const handleInputChange = (index, value) => {
+    setAnswersByPart((prev) => {
+      const partAns = prev[currentPart] || { radios: {}, inputs: Array(inputCount).fill("") };
+      const inputs = [...(partAns.inputs || Array(inputCount).fill(""))];
+      inputs[index] = value;
+      return { ...prev, [currentPart]: { ...partAns, inputs } };
+    });
   };
 
   return (
@@ -25,17 +66,43 @@ export default function Listening() {
         Your browser does not support the audio element.
       </audio>
 
-      {part.questions.map((q) => (
-        <div key={q.id} className="mb-6">
-          <p className="font-semibold mb-2">{q.question}</p>
-          {q.options.map((opt, i) => (
-            <label key={i} className="flex items-center mb-1">
-              <input type="radio" name={`q-${q.id}`} className="mr-2" />
-              {opt}
-            </label>
+      {/* If this part expects text inputs (e.g. part 2) render inputs */}
+      {inputCount > 0 ? (
+        <div className="mb-6 space-y-4">
+          <p className="font-semibold mb-2">Type your answers below:</p>
+          {Array.from({ length: inputCount }).map((_, i) => (
+            <div key={i}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Answer {i + 1}</label>
+              <input
+                type="text"
+                value={(answersByPart[currentPart]?.inputs?.[i]) ?? ""}
+                onChange={(e) => handleInputChange(i, e.target.value)}
+                className="w-full border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-0"
+                placeholder={`Answer ${i + 1}`}
+              />
+            </div>
           ))}
         </div>
-      ))}
+      ) : (
+        // default: render multiple-choice questions (radios) if present
+        part.questions?.map((q) => (
+          <div key={q.id} className="mb-6">
+            <p className="font-semibold mb-2">{q.question}</p>
+            {q.options.map((opt, i) => (
+              <label key={i} className="flex items-center mb-1">
+                <input
+                  type="radio"
+                  name={`q-${q.id}`}
+                  className="mr-2"
+                  checked={answersByPart[currentPart]?.radios?.[q.id] === opt}
+                  onChange={() => handleRadioChange(q.id, opt)}
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        ))
+      )}
 
       <div className="flex justify-between mt-8">
         <button

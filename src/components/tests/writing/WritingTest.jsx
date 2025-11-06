@@ -1,6 +1,7 @@
 // src/pages/writing/Writing.jsx
 import React, { useState } from "react";
 import { writingTest } from "./dataWriting";
+import EssayCommentForm from "../../textArea/textArea";
 
 export default function Writing() {
   const [currentPart, setCurrentPart] = useState(0);
@@ -13,7 +14,7 @@ export default function Writing() {
   const prevPart = () => {
     if (currentPart > 0) setCurrentPart(currentPart - 1);
   };
-
+  
   return (
     <div className="max-w-4xl mx-auto my-10 p-6 bg-white rounded-2xl shadow-lg">
       <h1 className="text-3xl font-bold text-red-600 mb-6">Writing Test</h1>
@@ -30,8 +31,8 @@ export default function Writing() {
             <span className="font-medium text-gray-800">{theme}</span>
           </li>
         ))}
+        <EssayCommentForm a={part.type}/>
       </ul>
-
       <div className="flex justify-between">
         <button
           onClick={prevPart}

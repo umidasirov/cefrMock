@@ -2,6 +2,7 @@
 export const writingTest = [
   {
     id: 1,
+    type: "letter",
     title: "Part 1: Letter Writing",
     description:
       "Write a letter in response to the given situation. You should write at least 150 words.",
@@ -11,6 +12,7 @@ export const writingTest = [
   },
   {
     id: 2,
+    type: "essay",
     title: "Part 2: Essay Writing",
     description:
       "Write an essay in response to one of the given topics. You should write at least 250 words.",
