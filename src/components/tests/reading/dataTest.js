@@ -339,12 +339,13 @@ The shift towards renewable energy is considered crucial for mitigating climate 
       options: ["Cooking", "Scientific research", "Sports", "Art"],
       correct: 1
     },
-    {
-      id: 6,
-      question: "What is a main concern regarding AI automation?",
-      options: ["Faster travel", "Workforce displacement", "Better weather", "More games"],
-      correct: 1
-    }
+  {
+    id: 6,
+    question: "What is a main concern regarding AI automation?",
+    options: ["Faster travel", "Workforce displacement", "Better weather", "More games"],
+    correct: 1
+  }
+] // bu multipleChoice massivi yopilishi kerak
 }
+]; // bu umumiy readingTestData yopilishi
 
-];
