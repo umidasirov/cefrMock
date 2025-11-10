@@ -284,12 +284,12 @@ The shift towards renewable energy is considered crucial for mitigating climate 
     ]
   },
   {
-  id: "reading-part5-advanced",
-  title: "Part 5 — Advanced Reading and Fill in the Gaps",
-  level: "C1",
-  type: "mixed",
-  language: "en",
-  passage: `Artificial Intelligence (AI) has rapidly transformed modern industries, revolutionizing the way we work, communicate, and solve problems. 
+    id: "reading-part5-advanced",
+    title: "Part 5 — Advanced Reading and Fill in the Gaps",
+    level: "C1",
+    type: "mixed",
+    language: "en",
+    passage: `Artificial Intelligence (AI) has rapidly transformed modern industries, revolutionizing the way we work, communicate, and solve problems. 
   From healthcare to finance, AI systems are assisting humans in making faster and more accurate decisions. 
   In medicine, AI algorithms analyze large datasets to help detect diseases earlier and recommend effective treatment plans. 
   Financial institutions use AI for fraud detection, risk assessment, and portfolio management, increasing efficiency and reducing human error.
@@ -310,42 +310,38 @@ The shift towards renewable energy is considered crucial for mitigating climate 
   AI also contributes to scientific research. 
   Machine learning models analyze complex data to accelerate discoveries in fields such as genetics, climate science, and physics. 
   By processing vast amounts of information quickly, AI enables researchers to uncover patterns and insights that would be difficult or impossible for humans to detect manually.`,
-  
-  // Fill-in-the-gaps (input) — 1–4
-  fillGaps: [
-    {
-      id: 1,
-      text: "AI systems in medicine help detect ______ earlier and suggest treatment plans."
-    },
-    {
-      id: 2,
-      text: "Financial institutions use AI for fraud detection, risk assessment, and ______ management."
-    },
-    {
-      id: 3,
-      text: "Repetitive tasks in manufacturing and logistics are increasingly handled by ______ and intelligent software."
-    },
-    {
-      id: 4,
-      text: "Developers, policymakers, and researchers create guidelines to ensure AI benefits society without causing ______."
-    }
-  ],
 
-  // Multiple-choice — 5–6
-  multipleChoice: [
-    {
-      id: 5,
-      question: "Which area does AI contribute to besides industry?",
-      options: ["Cooking", "Scientific research", "Sports", "Art"],
-      correct: 1
-    },
-  {
-    id: 6,
-    question: "What is a main concern regarding AI automation?",
-    options: ["Faster travel", "Workforce displacement", "Better weather", "More games"],
-    correct: 1
+    fillGaps: [
+      { id: 1, text: "AI systems in medicine help detect ______ earlier and suggest treatment plans." },
+      { id: 2, text: "Financial institutions use AI for fraud detection, risk assessment, and ______ management." },
+      { id: 3, text: "Repetitive tasks in manufacturing and logistics are increasingly handled by ______ and intelligent software." },
+      { id: 4, text: "Developers, policymakers, and researchers create guidelines to ensure AI benefits society without causing ______." }
+    ],
+
+    multipleChoice: [
+      {
+        id: 5,
+        question: "Which area does AI contribute to besides industry?",
+        options: ["Cooking", "Scientific research", "Sports", "Art"],
+        correct: 1
+      },
+      {
+        id: 6,
+        question: "What is a main concern regarding AI automation?",
+        options: ["Faster travel", "Workforce displacement", "Better weather", "More games"],
+        correct: 1
+      }
+    ],
+
+    correctAnswers: {
+      1: "diseases",
+      2: "portfolio",
+      3: "machines",
+      4: "harm",
+      5: "B",
+      6: "B"
+    }
   }
-] // bu multipleChoice massivi yopilishi kerak
-}
+
 ]; // bu umumiy readingTestData yopilishi
 

@@ -4,6 +4,9 @@ import { readingTestData } from "./dataTest";
 export default function ReadingTest() {
   const [currentPart, setCurrentPart] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [showResult, setShowResult] = useState(false);
+  const [result, setResult] = useState({ correct: 0, total: 0, level: "" });
+
   const test = readingTestData[currentPart];
 
   // 🔹 Next / Previous
@@ -118,7 +121,6 @@ export default function ReadingTest() {
         <div className="space-y-6">
           {test.paragraphs.map((p) => (
             <div key={p.id} className="bg-white p-4 border rounded shadow-sm">
-
               <div className="mx-auto">
                 <select
                   className="border border-gray-300 rounded px-2 py-1 w-full mb-4"
@@ -184,6 +186,118 @@ export default function ReadingTest() {
     </>
   );
 
+  // 🔹 Part 5: Mixed (Fill in the gaps + Multiple-choice)
+const handleFinishTest = () => {
+  const correctAnswers = {
+    1: "diseases",
+    2: "portfolio",
+    3: "machines",
+    4: "harm",
+    5: "B",
+    6: "B",
+  };
+
+  let correct = 0;
+  let total = Object.keys(correctAnswers).length;
+
+  Object.entries(correctAnswers).forEach(([id, ans]) => {
+    const userAnswer = answers[currentPart]?.[id];
+    if (
+      userAnswer &&
+      userAnswer.toString().trim().toLowerCase() === ans.toString().trim().toLowerCase()
+    ) {
+      correct++;
+    }
+  });
+
+  const percent = (correct / total) * 100;
+  let level = "Beginner";
+  if (percent >= 80) level = "Advanced (C1)";
+  else if (percent >= 60) level = "Upper-Intermediate (B2)";
+  else if (percent >= 40) level = "Intermediate (B1)";
+  else level = "Elementary (A2)";
+
+  setResult({ correct, total, level });
+  setShowResult(true);
+};
+
+
+  const renderMixedPart = () => (
+    <>
+      <div className="bg-gray-50 p-6 rounded-lg mb-6">
+        <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+          {test.passage}
+        </p>
+      </div>
+
+      {test.fillGaps && (
+        <div className="bg-white p-4 rounded-lg border mb-8">
+          <h2 className="font-semibold mb-3 text-lg">Fill in the gaps:</h2>
+          {test.fillGaps.map((q) => (
+            <div key={q.id} className="mb-3">
+              <p className="mb-2">
+                {q.id}. {q.text}
+              </p>
+              <input
+                type="text"
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                value={answers[currentPart]?.[q.id] || ""}
+                onChange={(e) => handleAnswerSelect(q.id, e.target.value)}
+                placeholder="Write your answer..."
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {test.multipleChoice && (
+        <div className="bg-white p-4 rounded-lg border">
+          <h2 className="font-semibold mb-3 text-lg">Multiple-choice:</h2>
+          {test.multipleChoice.map((q) => (
+            <div key={q.id} className="mb-4">
+              <p className="font-semibold mb-2">
+                {q.id}. {q.question}
+              </p>
+              <select
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                value={answers[currentPart]?.[q.id] || ""}
+                onChange={(e) => handleAnswerSelect(q.id, e.target.value)}
+              >
+                <option value="">(choose A–D)</option>
+                {q.options.map((opt, idx) => (
+                  <option key={idx} value={String.fromCharCode(65 + idx)}>
+                    {String.fromCharCode(65 + idx)}. {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button
+        onClick={handleFinishTest}
+        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded mt-6"
+      >
+        Finish
+      </button>
+
+      {showResult && (
+        <div className="mt-6 p-4 border-t border-gray-300">
+          <h3 className="text-xl font-bold mb-2 text-center text-green-700">
+            Results
+          </h3>
+          <p className="text-center text-gray-800">
+            ✅ Correct answers: <b>{result.correct}</b> / {result.total}
+          </p>
+          <p className="text-center text-gray-600 mt-1">
+            Your level:{" "}
+            <span className="font-semibold text-blue-700">{result.level}</span>
+          </p>
+        </div>
+      )}
+    </>
+  );
 
   return (
     <main className="flex-1 my-12">
@@ -195,13 +309,14 @@ export default function ReadingTest() {
         {test.type === "fill-the-gaps"
           ? renderFillGaps()
           : test.type === "matching" && test.ads
-            ? renderMatchingAds()
-            : test.type === "matching" && test.paragraphs
-              ? renderMatchingHeadings()
-              : test.type === "comprehension"
-                ? renderComprehension()
-                : <p>Unsupported question type</p>}
-
+          ? renderMatchingAds()
+          : test.type === "matching" && test.paragraphs
+          ? renderMatchingHeadings()
+          : test.type === "comprehension"
+          ? renderComprehension()
+          : test.type === "mixed"
+          ? renderMixedPart()
+          : <p>Unsupported question type</p>}
 
         <div className="flex justify-between mt-8">
           <button
