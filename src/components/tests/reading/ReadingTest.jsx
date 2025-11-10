@@ -188,26 +188,29 @@ export default function ReadingTest() {
 
   // 🔹 Part 5: Mixed (Fill in the gaps + Multiple-choice)
 const handleFinishTest = () => {
-  const correctAnswers = {
-    1: "diseases",
-    2: "portfolio",
-    3: "machines",
-    4: "harm",
-    5: "B",
-    6: "B",
-  };
+  // Barcha to‘g‘ri javoblar jamlanadi (har bir partdagi correctAnswers dan)
+  let allCorrectAnswers = {};
+
+  readingTestData.forEach((part, index) => {
+    if (part.correctAnswers) {
+      allCorrectAnswers[index] = part.correctAnswers;
+    }
+  });
 
   let correct = 0;
-  let total = Object.keys(correctAnswers).length;
+  let total = 0;
 
-  Object.entries(correctAnswers).forEach(([id, ans]) => {
-    const userAnswer = answers[currentPart]?.[id];
-    if (
-      userAnswer &&
-      userAnswer.toString().trim().toLowerCase() === ans.toString().trim().toLowerCase()
-    ) {
-      correct++;
-    }
+  Object.entries(allCorrectAnswers).forEach(([partIndex, answersObj]) => {
+    Object.entries(answersObj).forEach(([id, correctAns]) => {
+      total++;
+      const userAns = answers[partIndex]?.[id];
+      if (
+        userAns &&
+        userAns.toString().trim().toLowerCase() === correctAns.toString().trim().toLowerCase()
+      ) {
+        correct++;
+      }
+    });
   });
 
   const percent = (correct / total) * 100;
@@ -220,6 +223,7 @@ const handleFinishTest = () => {
   setResult({ correct, total, level });
   setShowResult(true);
 };
+
 
 
   const renderMixedPart = () => (

@@ -42,7 +42,7 @@ export const readingTestData = [
       { key: "E", word: "fun" },
       { key: "F", word: "shop" }
     ],
-    answers: {
+    correctAnswers: {
       1: "B",
       2: "C",
       3: "D",
@@ -116,7 +116,7 @@ export const readingTestData = [
       {
         id: 1,
         text: "Alice wants to buy a bicycle but doesn’t want to spend too much money.",
-        answer: "A"
+        correctAnswers: "A"
       },
       {
         id: 2,
@@ -186,7 +186,7 @@ export const readingTestData = [
       { key: "H", text: "Urban Development Issues" }     // extra
     ],
 
-    answers: {
+    correctAnswers: {
       1: "C",
       2: "F",
       3: "E",
