@@ -1,11 +1,14 @@
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import React from 'react'
-import { TestProvider } from './context/Context.jsx'  // ← TO'G'RI
-import App from './App.jsx'
 import './index.css'
+import App from './App'
+import { BrowserRouter } from 'react-router-dom'
+import ContextProvide from './context/Context'
 
 createRoot(document.getElementById('root')).render(
-    <TestProvider>
+  <BrowserRouter>
+    <ContextProvide>
       <App />
-    </TestProvider>
+    </ContextProvide>
+  </BrowserRouter>,
 )

@@ -1,63 +1,66 @@
-import React, { useState, useEffect } from "react";
-
-const questions = [
-  "Do you prefer studying alone or with others? Why?",
-  "What do you usually do in your free time?",
-  "How often do you use public transport?",
-  "Do you enjoy listening to music while studying?",
-  "Describe a challenge you faced recently.",
-  "Do you think young people today face more challenges than in the past?",
-  "How important is it for people to set goals in life?",
-  "What skills do people need to overcome difficulties?",
-  "Does modern technology make life easier or more stressful?",
-  "How can schools help students develop problem-solving skills?",
-];
+import React, { useState, useEffect, useMemo } from "react";
+import { useProvide } from "../../context/Context";
 
 export default function SpeakingQuestions() {
-  const [index, setIndex] = useState(0);               // Hozirgi savol
-  const [prepTime, setPrepTime] = useState(30);        // 30 sec
-  const [speakTime, setSpeakTime] = useState(120);     // 2 min
-  const [mode, setMode] = useState("prep");            // prep | speak | finish
+  const { tasks } = useProvide();
 
-  // PREP TIMER
+  // 🔹 FAQAT SPEAKING TASKLAR
+  const speakingQuestions = useMemo(() => {
+    return tasks
+      .filter(t => t.title?.toLowerCase().includes("speaking"))
+      .sort((a, b) => a.order - b.order)
+      .map(t => ({
+        id: t.id,
+        title: t.title,
+        instruction: t.instruction
+      }));
+  }, [tasks]);
+
+  // 🔹 STATES
+  const [index, setIndex] = useState(0);
+  const [prepTime, setPrepTime] = useState(30);
+  const [speakTime, setSpeakTime] = useState(120);
+  const [mode, setMode] = useState("prep"); // prep | speak | finish
+
+  // 🔹 PREP TIMER
   useEffect(() => {
     if (mode !== "prep") return;
-
     if (prepTime === 0) {
       setMode("speak");
       return;
     }
-
-    const timer = setTimeout(() => setPrepTime(prepTime - 1), 1000);
+    const timer = setTimeout(() => setPrepTime(t => t - 1), 1000);
     return () => clearTimeout(timer);
   }, [prepTime, mode]);
 
-  // SPEAK TIMER
+  // 🔹 SPEAK TIMER
   useEffect(() => {
     if (mode !== "speak") return;
-
     if (speakTime === 0) {
       goNext();
       return;
     }
-
-    const timer = setTimeout(() => setSpeakTime(speakTime - 1), 1000);
+    const timer = setTimeout(() => setSpeakTime(t => t - 1), 1000);
     return () => clearTimeout(timer);
   }, [speakTime, mode]);
 
-
-  // NEXT QUESTION
+  // 🔹 NEXT QUESTION
   function goNext() {
-    if (index + 1 >= questions.length) {
+    if (index + 1 >= speakingQuestions.length) {
       setMode("finish");
       return;
     }
-
-    setIndex(index + 1);
-    setPrepTime(30);     // Reset
+    setIndex(i => i + 1);
+    setPrepTime(30);
     setSpeakTime(120);
     setMode("prep");
   }
+
+  if (!speakingQuestions.length) {
+    return <p className="text-center mt-10">Loading speaking tasks...</p>;
+  }
+
+  const current = speakingQuestions[index];
 
   return (
     <div className="p-6 rounded-xl shadow-xl max-w-lg mx-auto bg-red-600 text-white mt-10">
@@ -70,7 +73,7 @@ export default function SpeakingQuestions() {
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold">🏁 You Finished!</h1>
           <button
-            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl"
+            className="px-6 py-3 bg-green-500 rounded-xl"
             onClick={() => {
               setIndex(0);
               setPrepTime(30);
@@ -83,35 +86,44 @@ export default function SpeakingQuestions() {
         </div>
       ) : (
         <>
-          {/* SAVOL CARD */}
+          {/* QUESTION CARD */}
           <div className="bg-white text-gray-900 p-5 rounded-xl shadow-md mb-6">
-            <h3 className="text-lg font-semibold mb-2">
-              Question {index + 1} of {questions.length}
+            <h3 className="text-sm text-gray-500 mb-1">
+              Question {index + 1} of {speakingQuestions.length}
             </h3>
-            <p className="text-lg">{questions[index]}</p>
+
+            <h4 className="text-lg font-bold mb-2">
+              {current.title}
+            </h4>
+
+            <p className="text-base text-gray-700">
+              {current.instruction}
+            </p>
           </div>
 
-          {/* TIMER – PREP PHASE */}
+          {/* PREP MODE */}
           {mode === "prep" && (
             <div className="text-center">
-              <p className="text-xl mb-3 font-bold">Prepare</p>
+              <p className="text-xl mb-3 font-bold">🧠 Prepare</p>
               <div className="text-4xl font-bold">{prepTime}s</div>
             </div>
           )}
 
-          {/* TIMER – SPEAK PHASE */}
+          {/* SPEAK MODE */}
           {mode === "speak" && (
             <div className="text-center">
-              <p className="text-xl mb-3 font-bold bg-red-400 inline-block p-1 rounded-3xl">🎤 Speak Now!</p>
+              <p className="text-xl mb-3 font-bold bg-red-400 inline-block px-4 py-1 rounded-full">
+                🎤 Speak Now!
+              </p>
               <div className="text-4xl font-bold">{speakTime}s</div>
             </div>
           )}
 
-          {/* NEXT BUTTON – faqat speak bo‘lsa bosiladi */}
+          {/* NEXT */}
           {mode === "speak" && (
             <button
               onClick={goNext}
-              className="w-full mt-6 px-4 py-3 bg-red-400 hover:bg-red-300 text-gray-100 font-semibold rounded-xl"
+              className="w-full mt-6 px-4 py-3 bg-red-400 rounded-xl"
             >
               Skip / Next
             </button>

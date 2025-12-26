@@ -1,67 +1,20 @@
 import React, { useState } from "react";
+import { useProvide } from "../../../context/Context";
 
 export default function Lpart5() {
+  const { tasks } = useProvide(); // contextdan olindi
   const [answers, setAnswers] = useState({});
 
-  const questions = [
-    {
-      id: 24,
-      text: "Anne was very astonished because the union ...",
-      options: [
-        "A) did not fire Frank soon",
-        "B) made him so popular",
-        "C) gave him an award",
-      ],
-    },
-    {
-      id: 25,
-      text: "What is the main reason for losing a job for Frank?",
-      options: [
-        "A) Sexist remarks toward his colleagues",
-        "B) The advertisement for the receptionist",
-        "C) Taking time to meet the deadline",
-      ],
-    },
-    {
-      id: 26,
-      text: "Smoke-jumping is an ideal job for most of the women as ...",
-      options: [
-        "A) they have a fitting weight",
-        "B) they weigh more than 80 kilos",
-        "C) they have a right attitude",
-      ],
-    },
-    {
-      id: 27,
-      text: "A speaker says that you are not able to get the right spot if ...",
-      options: [
-        "A) you are heavier",
-        "B) you leave a parachute",
-        "C) you are lighter",
-      ],
-    },
-    {
-      id: 28,
-      text: "According to the female speaker, what problem did the male teacher mention earlier?",
-      options: [
-        "A) He is strictly following the schedule",
-        "B) Some students are unable to do well",
-        "C) A student has emotional problems",
-      ],
-    },
-    {
-      id: 29,
-      text: "Brian tends to ... while acting.",
-      options: [
-        "A) daydream",
-        "B) listen",
-        "C) walk",
-      ],
-    },
-  ];
+  // Tasksdan savollarni olish va options arrayini yaratish
+  const questionsRaw = tasks.find(task => task.title === "Listening Part 5")?.questions || [];
+  const questions = questionsRaw.map(q => ({
+    id: q.question_number,  // 24, 25, 26 ...
+    text: q.question_text,
+    options: [q.option_a, q.option_b, q.option_c]
+  }));
 
   const handleChange = (qId, value) => {
-    setAnswers((prev) => ({ ...prev, [qId]: value }));
+    setAnswers(prev => ({ ...prev, [qId]: value }));
   };
 
   const handleSubmit = () => {
@@ -73,7 +26,7 @@ export default function Lpart5() {
       <h1 className="text-3xl font-bold text-center mb-6">Listening Part 5</h1>
 
       {/* Audio Player */}
-      <div className="shadow-lg rounded-xl p-4 mb-8 border-l-4 border-blue-400 bg-blue-200 shadow-lg rounded-xl p-4 mb-8">
+      <div className="shadow-lg rounded-xl p-4 mb-8 border-l-4 border-blue-400 bg-blue-200">
         <audio controls className="w-full">
           <source src="/audio/part5.mp3" type="audio/mpeg" />
           Your browser does not support the audio element.
@@ -86,10 +39,7 @@ export default function Lpart5() {
       {/* Questions */}
       <div className="space-y-6">
         {questions.map((q) => (
-          <div
-            key={q.id}
-            className="bg-blue-100 shadow-md rounded-xl p-5 w-full"
-          >
+          <div key={q.id} className="bg-blue-100 shadow-md rounded-xl p-5 w-full">
             <p className="text-lg font-semibold mb-3">{q.id}. {q.text}</p>
             <div className="flex flex-col space-y-2">
               {q.options.map((opt) => (

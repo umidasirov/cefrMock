@@ -1,40 +1,13 @@
 import React, { useState } from "react";
-
+import { useProvide } from "../../../context/Context";
 export default function Lpart1() {
   const [answers, setAnswers] = useState({});
+  const { tasks } = useProvide();
+  const questions = tasks.find(task => task.title === "Listening Part 1")?.questions || [];
 
-  const questions = [
-    {
-      id: 1,
-      text: "What is the man talking about?",
-      options: ["A book", "A lecture", "A movie", "A class"]
-    },
-    {
-      id: 2,
-      text: "Where is the conversation taking place?",
-      options: ["Library", "Cafeteria", "Office", "Classroom"]
-    },
-    {
-      id: 3,
-      text: "What time of day is it?",
-      options: ["Morning", "Afternoon", "Evening", "Night"]
-    },
-    {
-      id: 4,
-      text: "Who is the woman?",
-      options: ["Teacher", "Student", "Librarian", "Manager"]
-    },
-    {
-      id: 5,
-      text: "What does the man want to do?",
-      options: ["Borrow a book", "Attend class", "Watch a movie", "Go shopping"]
-    },
-    {
-      id: 6,
-      text: "How does the woman respond?",
-      options: ["Positively", "Negatively", "Indifferently", "Angrily"]
-    }
-  ];
+  console.log(questions);
+  console.log(tasks);
+
 
   const handleAnswer = (qId, option) => {
     setAnswers(prev => ({ ...prev, [qId]: option }));
@@ -58,26 +31,26 @@ export default function Lpart1() {
 
       {/* Questions */}
       <div className="space-y-4">
-        {questions.map((q) => (
-          <div
-            key={q.id}
-            className="bg-blue-100 p-4 m-2 rounded-3xl shadow-md rounded-xl p-5 w-full h-56 flex flex-col justify-between"
-          >
-            <h2 className="text-lg font-semibold mb-2">{q.id}. {q.text}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {q.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => handleAnswer(q.id, option)}
-                  className={`border rounded-lg p-3 text-gray-100 hover:bg-blue-300 transition 
-                    ${answers[q.id] === option ? 'bg-blue-300 border-blue-400' : 'bg-blue-500 border-blue-200'}`}
-                >
-                  {option}
-                </button>
-              ))}
+        {questions.map((q) => {
+          const options = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e, q.option_f].filter(Boolean);
+          return (
+            <div key={q.id} className="bg-blue-100 p-4 m-2 rounded-3xl shadow-md rounded-xl p-5 w-full h-56 flex flex-col justify-between">
+              <h2 className="text-lg font-semibold mb-2">{q.question_number}. {q.question_text}</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {options.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleAnswer(q.id, option)}
+                    className={`border rounded-lg p-3 text-gray-100 hover:bg-blue-300 transition 
+              ${answers[q.id] === option ? 'bg-blue-300 border-blue-400' : 'bg-blue-500 border-blue-200'}`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className="mt-8 text-center">
